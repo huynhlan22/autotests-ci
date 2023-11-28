@@ -3,7 +3,7 @@ name: iOS Automation
 on:
   push:
     branches:
-      - update_action
+      - main
   pull_request:
     branches:
       - main
