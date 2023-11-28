@@ -7,7 +7,7 @@ runs:
       run: pkill -f appium
       shell: bash
 
-    - name: Clean up
+    - name: Clean Up
       run: |
         ls {.,App}
         rm -rf /tmp/appium*
