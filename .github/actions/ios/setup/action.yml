@@ -59,7 +59,7 @@ runs:
         tar -xzf ios_build.tar.gz
       shell: bash
 
-    - name: Set up iOS Simulator
+    - name: Set Up iOS Simulator
       id: setup-simulator
       uses: futureware-tech/simulator-action@v3
       with:
