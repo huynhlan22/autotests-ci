@@ -1,4 +1,4 @@
-name: Automation Build and Release
+name: Automation Test for Android
 
 on:
   push:

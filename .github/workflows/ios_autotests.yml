@@ -1,9 +1,9 @@
-name: Automation Build and Release
+name: Automation Test for iOS
 
 on:
   push:
     branches:
-      - build_yml
+      - update_action
   pull_request:
     branches:
       - main
