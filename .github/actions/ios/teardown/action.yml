@@ -1,0 +1,17 @@
+name: Workflow Teardown
+description: "Workflow Teardown"
+runs:
+  using: "composite"
+  steps:
+    - name: Stop Appium Server
+      run: pkill -f appium
+      shell: bash
+
+    - name: Clean up
+      run: |
+        ls {.,App}
+        rm -rf /tmp/appium*
+        rm -f App/ios_build.tar.gz
+        rm -rf App/test.app
+        rm -rf venv
+      shell: bash

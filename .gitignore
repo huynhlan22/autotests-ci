@@ -1,0 +1,8 @@
+venv/
+config.ini
+logs/
+.idea/
+Results
+Reports/*.html
+Reports/*.xml
+.DS_Store

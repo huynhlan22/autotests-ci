@@ -1,0 +1,83 @@
+name: Automation Build and Release
+
+on:
+  push:
+    branches:
+      - build_yml
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  autotests-first-version:
+    name: iOS ${{ vars.IOS_FIRST_DEVICE_VERSION }} Automation
+    runs-on: macos-11
+
+    steps:
+      - name: Checkout Automation Code
+        uses: actions/checkout@v4
+
+      - name: Environment Setup
+        id: "env-setup"
+        uses: ./.github/actions/ios/setup
+        with:
+          ios-download-build: "${{ vars.IOS_BUILD_URL }}"
+          ios-model: "${{ vars.IOS_FIRST_DEVICE_MODEL }}"
+          ios-version: ${{ vars.IOS_FIRST_DEVICE_VERSION }}
+
+      - name: Execute Automation Tests
+        uses: ./.github/actions/ios/autotests
+        with:
+          ios-model: ${{ vars.IOS_FIRST_DEVICE_MODEL }}
+          ios-version: ${{ vars.IOS_FIRST_DEVICE_VERSION }}
+
+      - name: Workflow Teardown
+        uses: ./.github/actions/ios/teardown
+
+  autotests-second-version:
+    name: iOS ${{ vars.IOS_SECOND_DEVICE_VERSION }} Automation
+    runs-on: macos-13
+
+    steps:
+      - name: Checkout Automation Code
+        uses: actions/checkout@v4
+
+      - name: Environment Setup
+        uses: ./.github/actions/ios/setup
+        with:
+          ios-download-build: "${{ vars.IOS_BUILD_URL }}"
+          ios-model: "${{ vars.IOS_SECOND_DEVICE_MODEL }}"
+          ios-version: ${{ vars.IOS_SECOND_DEVICE_VERSION }}
+
+      - name: Execute Automation Tests
+        uses: ./.github/actions/ios/autotests
+        with:
+          ios-model: ${{ vars.IOS_SECOND_DEVICE_MODEL }}
+          ios-version: ${{ vars.IOS_SECOND_DEVICE_VERSION }}
+
+      - name: Workflow Teardown
+        uses: ./.github/actions/ios/teardown
+
+  autotests-third-version:
+    name: iOS ${{ vars.IOS_THIRD_DEVICE_VERSION }} Automation
+    runs-on: macos-13
+
+    steps:
+      - name: Checkout Automation Code
+        uses: actions/checkout@v4
+
+      - name: Environment Setup
+        uses: ./.github/actions/ios/setup
+        with:
+          ios-download-build: "${{ vars.IOS_BUILD_URL }}"
+          ios-model: "${{ vars.IOS_THIRD_DEVICE_MODEL }}"
+          ios-version: ${{ vars.IOS_THIRD_DEVICE_VERSION }}
+
+      - name: Execute Automation Tests
+        uses: ./.github/actions/ios/autotests
+        with:
+          ios-model: ${{ vars.IOS_THIRD_DEVICE_MODEL }}
+          ios-version: ${{ vars.IOS_THIRD_DEVICE_VERSION }}
+
+      - name: Workflow Teardown
+        uses: ./.github/actions/ios/teardown

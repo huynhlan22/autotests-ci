@@ -1,0 +1,40 @@
+name: Execute Automation Tests
+description: "Execute Automation Tests"
+inputs:
+  ios-model:
+    required: true
+  ios-version:
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Modify iOS UDID
+      run: |
+        python3 - <<EOF
+        file_path = 'Resources/Locators/CommonLocators.robot'
+        read_file = open(file_path, 'r')
+        file_content = read_file.read()
+        modify_content = file_content.replace("iphone_device_udid", "${{ env.SIMULATOR_UDID }}") \
+              .replace("iphone_device_model", "${{ inputs.ios-model }}") \
+              .replace("iphone_device_version", "${{ inputs.ios-version }}")
+        read_file.close()
+        modify_file = open(file_path, 'w')
+        modify_file.write(modify_content)
+        modify_file.close()
+        exit()
+        EOF
+      shell: bash
+
+    - name: Run and Test on iOS Simulator
+      run: |
+        ls
+        xcrun simctl install "${{ env.SIMULATOR_UDID }}" "App/test.app"
+        xcrun simctl launch "${{env.SIMULATOR_UDID }}" "com.lanhuynh.test"
+        robot -d Reports/ios_${{ inputs.ios-version }} --loglevel TRACE UiTests/TestSuite.robot
+      shell: bash
+
+    - name: Archive Test Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: iOS ${{ inputs.ios-version }} Automation Reports
+        path: Reports/ios_${{ inputs.ios-version }}
