@@ -1,4 +1,4 @@
-name: Automation Test for iOS
+name: iOS Automation
 
 on:
   push:

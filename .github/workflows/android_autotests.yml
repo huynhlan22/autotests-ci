@@ -1,4 +1,4 @@
-name: Automation Test for Android
+name: Android Automation
 
 on:
   push:
