@@ -12,7 +12,7 @@ on:
 jobs:
   autotests-first-version:
     name: iOS ${{ vars.IOS_FIRST_DEVICE_VERSION }} Automation
-    runs-on: macos-11
+    runs-on: ${{ vars.IOS_FIRST_VM }}
 
     steps:
       - name: Checkout Automation Code
@@ -37,7 +37,7 @@ jobs:
 
   autotests-second-version:
     name: iOS ${{ vars.IOS_SECOND_DEVICE_VERSION }} Automation
-    runs-on: macos-13
+    runs-on: ${{ vars.IOS_SECOND_VM }}
 
     steps:
       - name: Checkout Automation Code
@@ -61,7 +61,7 @@ jobs:
 
   autotests-third-version:
     name: iOS ${{ vars.IOS_THIRD_DEVICE_VERSION }} Automation
-    runs-on: macos-13
+    runs-on: ${{ vars.IOS_THIRD_VM }}
 
     steps:
       - name: Checkout Automation Code
