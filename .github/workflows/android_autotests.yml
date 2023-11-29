@@ -38,7 +38,14 @@ jobs:
         run: source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --update
 
       - name: Accept Android Licenses
-        run: yes | source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --licenses
+        run: |
+          source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --list
+          yes | source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --licenses
+          source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --verbose --channel=0 "system-images;android-30;default;x86"
+          source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --verbose --channel=0 "build-tools;31.0.0"
+          source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --verbose --channel=0 "platform-tools"
+          source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --verbose --channel=0 "emulator"
+          popd
 
       - name: Download APK File
         run: |
