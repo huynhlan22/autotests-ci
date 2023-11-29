@@ -29,6 +29,7 @@ runs:
       run: |
         xcrun simctl install "${{ env.SIMULATOR_UDID }}" "App/test.app"
         xcrun simctl launch "${{env.SIMULATOR_UDID }}" "com.lanhuynh.test"
+        sleep 10
         robot -d Reports/ios_${{ inputs.ios-version }} --loglevel TRACE UiTests/TestSuite.robot
       shell: bash
 
