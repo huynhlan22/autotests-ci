@@ -38,10 +38,7 @@ jobs:
         run: source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --update
 
       - name: Accept Android Licenses
-        run: |
-          source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --list
-          yes | source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --licenses
-          source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --verbose --channel=0 "system-images;android-30;default;x86_64"
+        run: yes | source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --licenses
 
       - name: Download APK File
         run: |
@@ -64,7 +61,7 @@ jobs:
       - name: Create AVD and Run Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 33
           arch: x86_64
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
