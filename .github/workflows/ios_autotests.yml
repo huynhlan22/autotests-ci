@@ -3,10 +3,10 @@ name: iOS Automation
 on:
   push:
     branches:
-      - main
+      - update_action
   pull_request:
     branches:
-      - update_action
+      - main
   workflow_dispatch:
 
 jobs:
