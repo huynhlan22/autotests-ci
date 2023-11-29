@@ -12,10 +12,6 @@ jobs:
   test:
     name: Android Automation Test
     runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level: [29, 30]
-
     steps:
       - name: Checkout Automation Code
         uses: actions/checkout@v4
