@@ -42,7 +42,6 @@ jobs:
           source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --list
           yes | source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --licenses
           source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --verbose --channel=0 "system-images;android-30;default;x86_64"
-          popd
 
       - name: Download APK File
         run: |
