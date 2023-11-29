@@ -12,6 +12,9 @@ jobs:
   test:
     name: Android Automation Test
     runs-on: macos-latest
+    strategy:
+      matrix:
+        api-level: [29, 31, 34]
     steps:
       - name: Checkout Automation Code
         uses: actions/checkout@v4
@@ -61,7 +64,7 @@ jobs:
       - name: Create AVD and Run Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
+          api-level: ${{ matrix.api-level }}
           arch: x86_64
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none

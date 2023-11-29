@@ -32,8 +32,7 @@ runs:
     - name: Run and Test on iOS Simulator
       run: |
         xcrun simctl install "${{ env.SIMULATOR_UDID }}" "App/test.app"
-        xcrun simctl launch "${{env.SIMULATOR_UDID }}" "com.lanhuynh.test"
-        sleep 10
+        # xcrun simctl launch "${{env.SIMULATOR_UDID }}" "com.lanhuynh.test"
         robot -d Reports/ios_${{ inputs.ios-version }} --loglevel TRACE UiTests/TestSuite_ios.robot
       shell: bash
 
