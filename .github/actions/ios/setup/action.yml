@@ -14,6 +14,7 @@ runs:
       run: |
         npm i --location=global appium
         appium driver install xcuitest
+      shell: bash
 
     - name: Set Up Xcode
       run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
