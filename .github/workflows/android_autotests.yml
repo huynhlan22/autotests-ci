@@ -92,7 +92,7 @@ jobs:
           script: |
             adb devices
             adb install -r App/application.apk
-            robot -d Reports --loglevel TRACE UiTests/TestSuite.robot
+            robot -d Reports --loglevel TRACE UiTests/TestSuite_android.robot
 
       - name: Archive Test Artifacts
         uses: actions/upload-artifact@v3
