@@ -19,8 +19,10 @@ jobs:
       - name: Environment Setup
         uses: ./.github/actions/setup
 
-      - name: Install Android Platform
+      - name: Install Appium and Android Platform
         run: |
+          npm i --location=global appium
+          appium driver install uiautomator2
           brew update
           brew install android-platform-tools
 

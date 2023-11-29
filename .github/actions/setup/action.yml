@@ -11,12 +11,6 @@ runs:
       with:
         python-version: "3.12.0"
 
-    - name: Install Appium
-      run: |
-        npm i --location=global appium
-        appium driver install xcuitest
-      shell: bash
-
     - name: Create and Activate Venv
       run: |
         python3 -m venv venv

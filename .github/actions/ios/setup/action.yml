@@ -10,8 +10,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # - name: Set Up Homebrew
-    #   uses: Homebrew/actions/setup-homebrew@master
+    - name: Install Appium
+      run: |
+        npm i --location=global appium
+        appium driver install xcuitest
 
     - name: Set Up Xcode
       run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
@@ -24,27 +26,6 @@ runs:
     - name: Check Available Simulators
       run: xcrun simctl list devices
       shell: bash
-
-    # - name: Set Up Python
-    #   uses: actions/setup-python@v4
-    #   with:
-    #     python-version: "3.12.0"
-
-    # - name: Install Appium
-    #   run: |
-    #     npm i --location=global appium
-    #     appium driver install xcuitest
-    #   shell: bash
-
-    # - name: Create and Activate Venv
-    #   run: |
-    #     python3 -m venv venv
-    #     source venv/bin/activate
-    #   shell: bash
-
-    # - name: Install Dependencies
-    #   run: pip install -r requirements.txt
-    #   shell: bash
 
     - name: Download and Extract iOS Build
       run: |
