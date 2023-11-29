@@ -11,7 +11,7 @@ runs:
     - name: Modify iOS UDID
       run: |
         python3 - <<EOF
-        file_path = 'Resources/Locators/CommonLocators.robot'
+        file_path = 'Resources/Locators/CommonLocators_ios.robot'
         read_file = open(file_path, 'r')
         file_content = read_file.read()
         modify_content = file_content.replace("iphone_device_udid", "${{ env.SIMULATOR_UDID }}") \
