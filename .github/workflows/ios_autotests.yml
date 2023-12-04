@@ -1,9 +1,6 @@
-name: iOS Automation Test
+name: iOS Automation
 
 on:
-  push:
-    branches:
-      - update_action
   pull_request:
     branches:
       - main

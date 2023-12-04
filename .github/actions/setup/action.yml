@@ -11,12 +11,16 @@ runs:
       with:
         python-version: "3.12.0"
 
-    - name: Create and Activate Venv
+    - name: Install Dependencies
       run: |
         python3 -m venv venv
         source venv/bin/activate
+        pip install -r requirements.txt
       shell: bash
 
-    - name: Install Dependencies
-      run: pip install -r requirements.txt
-      shell: bash
+    - name: 🛠️ Setup Expo
+      uses: expo/expo-github-action@v8
+      with:
+        expo-version: latest
+        eas-version: latest
+        token: ${{ secrets.EXPO_TOKEN }}
