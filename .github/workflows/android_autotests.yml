@@ -1,9 +1,6 @@
 name: Android Automation
 
 on:
-  push:
-    branches:
-      - update_action
   pull_request:
     branches:
       - master

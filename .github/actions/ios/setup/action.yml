@@ -28,12 +28,12 @@ runs:
       run: xcrun simctl list devices
       shell: bash
 
-    - name: Checkout Application Code
-      uses: actions/checkout@v4
-      with:
-        repository: huynhlan21/test
-        ref: build
-        path: App
+    # - name: Checkout Application Code
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: huynhlan21/test
+    #     ref: build
+    #     path: App
 
     # - name: Build for iOS Similators
     #   run: |

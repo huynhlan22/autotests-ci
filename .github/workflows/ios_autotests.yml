@@ -57,7 +57,7 @@ jobs:
         with:
           repository: huynhlan21/test
           ref: build
-        path: App
+          path: App
 
       - name: Build for iOS Similators
         run: |
