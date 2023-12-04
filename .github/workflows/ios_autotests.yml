@@ -3,45 +3,48 @@ name: iOS Automation
 on:
   push:
     branches:
-      - master
+      - update_action
   pull_request:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 jobs:
-  autotests-first-version:
-    name: iOS ${{ vars.IOS_FIRST_DEVICE_VERSION }} Automation
-    runs-on: ${{ vars.IOS_FIRST_VM }}
+  # autotests-first-version:
+  #   name: iOS ${{ vars.IOS_FIRST_DEVICE_VERSION }} Automation
+  #   runs-on: ${{ vars.IOS_FIRST_VM }}
 
-    steps:
-      - name: Checkout Automation Code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout Automation Code
+  #       uses: actions/checkout@v4
 
-      - name: Environment Setup
-        uses: ./.github/actions/setup
+  #     - name: Environment Setup
+  #       uses: ./.github/actions/setup
 
-      - name: iOS Environment Setup
-        uses: ./.github/actions/ios/setup
-        with:
-          ios-download-build: "${{ vars.IOS_BUILD_URL }}"
-          ios-model: "${{ vars.IOS_FIRST_DEVICE_MODEL }}"
-          ios-version: ${{ vars.IOS_FIRST_DEVICE_VERSION }}
+  #     - name: iOS Environment Setup
+  #       uses: ./.github/actions/ios/setup
+  #       with:
+  #         ios-download-build: "${{ vars.IOS_BUILD_URL }}"
+  #         ios-model: "${{ vars.IOS_FIRST_DEVICE_MODEL }}"
+  #         ios-version: ${{ vars.IOS_FIRST_DEVICE_VERSION }}
 
-      - name: Execute Automation Tests
-        uses: ./.github/actions/ios/autotests
-        with:
-          ios-model: ${{ vars.IOS_FIRST_DEVICE_MODEL }}
-          ios-version: ${{ vars.IOS_FIRST_DEVICE_VERSION }}
+  #     - name: Execute Automation Tests
+  #       uses: ./.github/actions/ios/autotests
+  #       with:
+  #         ios-model: ${{ vars.IOS_FIRST_DEVICE_MODEL }}
+  #         ios-version: ${{ vars.IOS_FIRST_DEVICE_VERSION }}
 
-      - name: Workflow Teardown
-        uses: ./.github/actions/ios/teardown
+  #     - name: Workflow Teardown
+  #       uses: ./.github/actions/ios/teardown
 
   autotests-second-version:
     name: iOS ${{ vars.IOS_SECOND_DEVICE_VERSION }} Automation
     runs-on: ${{ vars.IOS_SECOND_VM }}
 
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.0
+
       - name: Checkout Automation Code
         uses: actions/checkout@v4
 
@@ -64,29 +67,29 @@ jobs:
       - name: Workflow Teardown
         uses: ./.github/actions/ios/teardown
 
-  autotests-third-version:
-    name: iOS ${{ vars.IOS_THIRD_DEVICE_VERSION }} Automation
-    runs-on: ${{ vars.IOS_THIRD_VM }}
+  # autotests-third-version:
+  #   name: iOS ${{ vars.IOS_THIRD_DEVICE_VERSION }} Automation
+  #   runs-on: ${{ vars.IOS_THIRD_VM }}
 
-    steps:
-      - name: Checkout Automation Code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout Automation Code
+  #       uses: actions/checkout@v4
 
-      - name: Environment Setup
-        uses: ./.github/actions/setup
+  #     - name: Environment Setup
+  #       uses: ./.github/actions/setup
 
-      - name: iOS Environment Setup
-        uses: ./.github/actions/ios/setup
-        with:
-          ios-download-build: "${{ vars.IOS_BUILD_URL }}"
-          ios-model: "${{ vars.IOS_THIRD_DEVICE_MODEL }}"
-          ios-version: ${{ vars.IOS_THIRD_DEVICE_VERSION }}
+  #     - name: iOS Environment Setup
+  #       uses: ./.github/actions/ios/setup
+  #       with:
+  #         ios-download-build: "${{ vars.IOS_BUILD_URL }}"
+  #         ios-model: "${{ vars.IOS_THIRD_DEVICE_MODEL }}"
+  #         ios-version: ${{ vars.IOS_THIRD_DEVICE_VERSION }}
 
-      - name: Execute Automation Tests
-        uses: ./.github/actions/ios/autotests
-        with:
-          ios-model: ${{ vars.IOS_THIRD_DEVICE_MODEL }}
-          ios-version: ${{ vars.IOS_THIRD_DEVICE_VERSION }}
+  #     - name: Execute Automation Tests
+  #       uses: ./.github/actions/ios/autotests
+  #       with:
+  #         ios-model: ${{ vars.IOS_THIRD_DEVICE_MODEL }}
+  #         ios-version: ${{ vars.IOS_THIRD_DEVICE_VERSION }}
 
-      - name: Workflow Teardown
-        uses: ./.github/actions/ios/teardown
+  #     - name: Workflow Teardown
+  #       uses: ./.github/actions/ios/teardown
