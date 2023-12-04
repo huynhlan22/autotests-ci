@@ -35,21 +35,22 @@ runs:
         ref: build
         path: App
 
-    - name: Build for iOS Similators
-      run: |
-        cd App
-        eas build --profile simulator --platform ios
-        eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl
-        echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
+    # - name: Build for iOS Similators
+    #   run: |
+    #     cd App
+    #     eas build --profile simulator --platform ios
+    #     eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl
+    #     echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
+    #   shell: bash
 
-    - name: Download and Extract iOS Build
-      run: |
-        wget -O ios_build.tar.gz ${{ env.ios-download-build }}
-        # mkdir -p App
-        mv ios_build.tar.gz App/
-        cd App
-        tar -xzf ios_build.tar.gz
-      shell: bash
+    # - name: Download and Extract iOS Build
+    #   run: |
+    #     wget -O ios_build.tar.gz ${{ env.ios-download-build }}
+    #     # mkdir -p App
+    #     mv ios_build.tar.gz App/
+    #     cd App
+    #     tar -xzf ios_build.tar.gz
+    #   shell: bash
 
     - name: Set Up iOS Simulator
       id: setup-simulator
