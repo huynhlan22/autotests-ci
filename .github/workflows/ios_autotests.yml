@@ -62,6 +62,7 @@ jobs:
       - name: Build for iOS Similators
         run: |
           cd App
+          npm i
           eas build --profile simulator --platform ios
           eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl
           echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
