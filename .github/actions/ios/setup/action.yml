@@ -30,6 +30,7 @@ runs:
 
     - name: Download and Extract iOS Build
       run: |
+        mkdir -p App
         wget -O ios_build.tar.gz ${{ inputs.ios-download-build }}
         mv ios_build.tar.gz App/
         cd App
