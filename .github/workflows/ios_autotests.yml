@@ -40,7 +40,7 @@ jobs:
       # test with ios build - end
       - name: Download and Extract iOS Build
         run: |
-          wget -O ios_build.tar.gz ${{ env.ios-download-build }}
+          wget -O ios_build.tar.gz ${{ env.IOS_DOWNLOAD_BUILD }}
           mv ios_build.tar.gz App/
           cd App
           tar -xzf ios_build.tar.gz
