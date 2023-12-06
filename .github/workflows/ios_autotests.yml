@@ -15,6 +15,36 @@ jobs:
       - name: Checkout Automation Code
         uses: actions/checkout@v4
 
+      # test with ios build - start
+      - name: 🛠️ Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Checkout Application Code
+        uses: actions/checkout@v4
+        with:
+          repository: huynhlan21/test
+          ref: build
+          path: App
+
+      - name: Build for iOS Similators
+        run: |
+          cd App
+          npm i
+          eas build --profile simulator --platform ios
+          echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
+
+      # test with ios build - end
+      - name: Download and Extract iOS Build
+        run: |
+          wget -O ios_build.tar.gz ${{ env.ios-download-build }}
+          mv ios_build.tar.gz App/
+          cd App
+          tar -xzf ios_build.tar.gz
+
       - name: Environment Setup
         uses: ./.github/actions/setup
 
