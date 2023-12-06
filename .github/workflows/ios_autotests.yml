@@ -35,8 +35,7 @@ jobs:
         run: |
           cd App
           npm i
-          eas build --profile simulator --platform ios
-          # echo "ios-download-build=$(eas build:list --json --limit=1 --platform=ios < /dev/null | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
+          eas build --profile simulator --platform ios --non-interactive
 
       - name: Check the build output
         run: echo "${{ toJson(steps.build-ios.outputs) }}"
