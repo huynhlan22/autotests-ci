@@ -31,14 +31,11 @@ jobs:
           path: App
 
       - name: Build for iOS Similators
-        id: build-ios
         run: |
           cd App
           npm i
           eas build --profile simulator --platform ios --non-interactive
-
-      - name: Check the build output
-        run: echo "${{ toJson(steps.build-ios.outputs) }}"
+          echo "IOS_DOWNLOAD_BUILD=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
 
       # test with ios build - end
       - name: Download and Extract iOS Build
