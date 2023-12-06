@@ -35,7 +35,7 @@ jobs:
           cd App
           npm i
           eas build --profile simulator --platform ios
-          echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
+          echo "ios-download-build=$(eas build:list --json --limit=1 --platform=ios < /dev/null | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
 
       # test with ios build - end
       - name: Download and Extract iOS Build
