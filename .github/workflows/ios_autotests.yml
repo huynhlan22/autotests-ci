@@ -97,13 +97,6 @@ jobs:
       #     eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl
       #     echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
 
-      - name: Download and Extract iOS Build
-        run: |
-          wget -O ios_build.tar.gz ${{ env.ios-download-build }}
-          mv ios_build.tar.gz App/
-          cd App
-          tar -xzf ios_build.tar.gz
-
       - name: Environment Setup
         uses: ./.github/actions/setup
 
