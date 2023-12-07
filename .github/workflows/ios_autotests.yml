@@ -15,36 +15,6 @@ jobs:
   #     - name: Checkout Automation Code
   #       uses: actions/checkout@v4
 
-  #     # test with ios build - start
-  #     - name: 🛠️ Setup Expo
-  #       uses: expo/expo-github-action@v8
-  #       with:
-  #         expo-version: latest
-  #         eas-version: latest
-  #         token: ${{ secrets.EXPO_TOKEN }}
-
-  #     - name: Checkout Application Code
-  #       uses: actions/checkout@v4
-  #       with:
-  #         repository: huynhlan21/test
-  #         ref: build
-  #         path: App
-
-  #     - name: Build for iOS Similators
-  #       run: |
-  #         cd App
-  #         npm i
-  #         eas build --profile simulator --platform ios --non-interactive
-  #         echo "IOS_DOWNLOAD_BUILD=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
-
-  #     # test with ios build - end
-  #     - name: Download and Extract iOS Build
-  #       run: |
-  #         wget -O ios_build.tar.gz ${{ env.IOS_DOWNLOAD_BUILD }}
-  #         mv ios_build.tar.gz App/
-  #         cd App
-  #         tar -xzf ios_build.tar.gz
-
   #     - name: Environment Setup
   #       uses: ./.github/actions/setup
 
@@ -64,57 +34,35 @@ jobs:
   #     - name: Workflow Teardown
   #       uses: ./.github/actions/ios/teardown
 
-  autotests-second-version:
-    name: iOS ${{ vars.IOS_SECOND_DEVICE_VERSION }} Automation
-    runs-on: ${{ vars.IOS_SECOND_VM }}
+  # autotests-second-version:
+  #   name: iOS ${{ vars.IOS_SECOND_DEVICE_VERSION }} Automation
+  #   runs-on: ${{ vars.IOS_SECOND_VM }}
 
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.0
+  #   steps:
+  #     - name: Cancel Previous Runs
+  #       uses: styfle/cancel-workflow-action@0.12.0
 
-      - name: Checkout Automation Code
-        uses: actions/checkout@v4
+  #     - name: Checkout Automation Code
+  #       uses: actions/checkout@v4
 
-      # - name: 🛠️ Setup Expo
-      #   uses: expo/expo-github-action@v8
-      #   with:
-      #     expo-version: latest
-      #     eas-version: latest
-      #     token: ${{ secrets.EXPO_TOKEN }}
+  #     - name: Environment Setup
+  #       uses: ./.github/actions/setup
 
-      # - name: Checkout Application Code
-      #   uses: actions/checkout@v4
-      #   with:
-      #     repository: huynhlan21/test
-      #     ref: build
-      #     path: App
+  #     - name: iOS Environment Setup
+  #       uses: ./.github/actions/ios/setup
+  #       with:
+  #         ios-download-build: "${{ vars.IOS_BUILD_URL }}"
+  #         ios-model: "${{ vars.IOS_SECOND_DEVICE_MODEL }}"
+  #         ios-version: ${{ vars.IOS_SECOND_DEVICE_VERSION }}
 
-      # - name: Build for iOS Similators
-      #   run: |
-      #     cd App
-      #     npm i
-      #     eas build --profile simulator --platform ios
-      #     eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl
-      #     echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
+  #     - name: Execute Automation Tests
+  #       uses: ./.github/actions/ios/autotests
+  #       with:
+  #         ios-model: ${{ vars.IOS_SECOND_DEVICE_MODEL }}
+  #         ios-version: ${{ vars.IOS_SECOND_DEVICE_VERSION }}
 
-      - name: Environment Setup
-        uses: ./.github/actions/setup
-
-      - name: iOS Environment Setup
-        uses: ./.github/actions/ios/setup
-        with:
-          ios-download-build: "${{ vars.IOS_BUILD_URL }}"
-          ios-model: "${{ vars.IOS_SECOND_DEVICE_MODEL }}"
-          ios-version: ${{ vars.IOS_SECOND_DEVICE_VERSION }}
-
-      - name: Execute Automation Tests
-        uses: ./.github/actions/ios/autotests
-        with:
-          ios-model: ${{ vars.IOS_SECOND_DEVICE_MODEL }}
-          ios-version: ${{ vars.IOS_SECOND_DEVICE_VERSION }}
-
-      - name: Workflow Teardown
-        uses: ./.github/actions/ios/teardown
+  #     - name: Workflow Teardown
+  #       uses: ./.github/actions/ios/teardown
 
   # autotests-third-version:
   #   name: iOS ${{ vars.IOS_THIRD_DEVICE_VERSION }} Automation
@@ -142,3 +90,89 @@ jobs:
 
   #     - name: Workflow Teardown
   #       uses: ./.github/actions/ios/teardown
+autotests-full-workflow:
+  name: iOS Automation Test
+  runs-on: macos-13
+  env:
+    IOS_MODEL: iPhone 14
+    IOS_VERSION: 16.4
+
+  steps:
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.12.0
+
+    - name: Checkout Automation Code
+      uses: actions/checkout@v4
+
+    # - name: 🛠️ Setup Expo
+    #   uses: expo/expo-github-action@v8
+    #   with:
+    #     expo-version: latest
+    #     eas-version: latest
+    #     token: ${{ secrets.EXPO_TOKEN }}
+
+    # - name: Checkout Application Code
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: huynhlan21/test
+    #     ref: build
+    #     path: App
+
+    # - name: Build for iOS Similators
+    #   run: |
+    #     cd App
+    #     npm i
+    #     eas build --profile simulator --platform ios
+    #     eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl
+    #     echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
+
+    - name: Set Up Homebrew
+      uses: Homebrew/actions/setup-homebrew@master
+
+    - name: Set Up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12.0"
+
+    - name: Install Dependencies
+      run: pip install -r requirements.txt
+
+    - name: Install Appium
+      run: |
+        npm i --location=global appium
+        appium driver install xcuitest
+        npm i appium-webdriveragent
+
+    - name: Set Up Xcode
+      run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+    - name: Verify Xcode Installation
+      run: xcodebuild -version -sdk
+
+    - name: Download and Extract iOS Build
+      run: |
+        mkdir -p App
+        wget -O ios_build.tar.gz ${{ inputs.ios-download-build }}
+        mv ios_build.tar.gz App/
+        cd App
+        tar -xzf ios_build.tar.gz
+
+    - name: Set Up iOS Simulator
+      id: setup-simulator
+      uses: futureware-tech/simulator-action@v3
+      with:
+        model: "${{ env.ios-model }}"
+        os_version: ${{ env.ios-version }}
+
+    - name: Set Environment Variables for Simulator
+      id: set-env-simulator
+      run: echo "SIMULATOR_UDID=${{ steps.setup-simulator.outputs.udid }}" >> $GITHUB_ENV
+
+    - name: Execute Automation Tests
+      uses: ./.github/actions/ios/autotests
+      with:
+        ios-model: ${{ env.ios-model }}
+        ios-version: ${{ env.ios-version }}
+
+    - name: Workflow Teardown
+      uses: ./.github/actions/ios/teardown
