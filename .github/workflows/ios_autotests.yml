@@ -93,10 +93,10 @@ jobs:
 
   autotests-full-workflow:
     name: iOS Automation Test
-    runs-on: macos-13
+    runs-on: macos-11
     env:
-      F_IOS_MODEL: iPhone 14
-      F_IOS_VERSION: 16.4
+      F_IOS_MODEL: iPhone 12
+      F_IOS_VERSION: 15.2
 
     steps:
       - name: Cancel Previous Runs
