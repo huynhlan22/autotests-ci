@@ -130,8 +130,8 @@ jobs:
       - name: Install Appium
         run: |
           npm i --location=global appium
+          npm i appium-webdriveragent
           appium driver install xcuitest
-          ls
 
       - name: Set Up Python
         uses: actions/setup-python@v4
@@ -165,7 +165,7 @@ jobs:
         id: setup-simulator
         uses: futureware-tech/simulator-action@v3
         with:
-          model: "${{ env.F_IOS_MODELl }}"
+          model: "${{ env.F_IOS_MODEL }}"
           os_version: ${{ env.F_IOS_VERSION }}
 
       - name: Set Environment Variables for Simulator
