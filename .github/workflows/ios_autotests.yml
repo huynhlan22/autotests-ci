@@ -135,10 +135,10 @@ jobs:
       - name: Install Appium
         run: |
           npm i --location=global appium
-          npm i appium-webdriveragent
+          # npm i appium-webdriveragent
           appium driver install xcuitest
           cd node_modules/appium-webdriveragent
-          ls {.,appium-webdriveragent}
+          ls
 
       - name: Set Up Xcode
         run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
