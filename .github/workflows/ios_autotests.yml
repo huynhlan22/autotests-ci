@@ -131,6 +131,7 @@ jobs:
         run: |
           npm i --location=global appium
           appium driver install xcuitest
+          ls
 
       - name: Set Up Python
         uses: actions/setup-python@v4
