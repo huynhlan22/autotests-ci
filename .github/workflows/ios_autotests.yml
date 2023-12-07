@@ -102,9 +102,6 @@ jobs:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.0
 
-      - name: Checkout Automation Code
-        uses: actions/checkout@v4
-
       # - name: 🛠️ Setup Expo
       #   uses: expo/expo-github-action@v8
       #   with:
@@ -135,15 +132,13 @@ jobs:
         with:
           python-version: "3.12.0"
 
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
       - name: Install Appium
         run: |
           npm i --location=global appium
           npm i appium-webdriveragent
           appium driver install xcuitest
-          cd .appium/node_modules/appium-xcuitest-driver/node_modules/appium-webdriveragent/
+          cd .appium/node_modules
+          # cd .appium/node_modules/appium-xcuitest-driver/node_modules/appium-webdriveragent/
           ls
 
       - name: Set Up Xcode
@@ -151,6 +146,12 @@ jobs:
 
       - name: Verify Xcode Installation
         run: xcodebuild -version -sdk
+
+      - name: Checkout Automation Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
 
       - name: Download and Extract iOS Build
         run: |
