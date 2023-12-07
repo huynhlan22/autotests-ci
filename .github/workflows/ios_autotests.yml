@@ -144,6 +144,9 @@ jobs:
       - name: Verify Xcode Installation
         run: xcodebuild -version -sdk
 
+      - name: Check Available Simulators
+        run: xcrun simctl list devices
+
       - name: Checkout Automation Code
         uses: actions/checkout@v4
 
