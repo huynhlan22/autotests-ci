@@ -130,7 +130,6 @@ jobs:
       - name: Install Appium
         run: |
           npm i --location=global appium
-          npm i appium-webdriveragent
           appium driver install xcuitest
 
       - name: Set Up Python
