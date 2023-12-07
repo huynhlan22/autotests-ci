@@ -93,10 +93,10 @@ jobs:
 
   autotests-full-workflow:
     name: iOS Automation Test
-    runs-on: macos-11
+    runs-on: macos-13
     env:
-      F_IOS_MODEL: iPhone 12
-      F_IOS_VERSION: 15.2
+      F_IOS_MODEL: iPhone 14
+      F_IOS_VERSION: 16.4
 
     steps:
       - name: Cancel Previous Runs
@@ -137,7 +137,7 @@ jobs:
           npm i --location=global appium
           npm i appium-webdriveragent
           appium driver install xcuitest
-          cd .appium/node_modules
+          # cd .appium/node_modules
           # cd .appium/node_modules/appium-xcuitest-driver/node_modules/appium-webdriveragent/
           ls
 
