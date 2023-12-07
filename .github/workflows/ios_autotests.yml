@@ -127,11 +127,14 @@ jobs:
       - name: Set Up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Install Appium
-        run: |
-          npm i --location=global appium
-          npm i appium-webdriveragent
-          appium driver install xcuitest
+      - name: Install and Run Appium Server
+        uses: moatazeldebsy/appium-server-gitHub-action@V1.0.4
+
+      # - name: Install Appium
+      #   run: |
+      #     npm i --location=global appium
+      #     npm i appium-webdriveragent
+      #     appium driver install xcuitest
 
       - name: Set Up Python
         uses: actions/setup-python@v4
