@@ -143,6 +143,7 @@ jobs:
           npm i --location=global appium
           npm i appium-webdriveragent
           appium driver install xcuitest
+          ls -R
 
       - name: Set Up Xcode
         run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
