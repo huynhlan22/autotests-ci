@@ -1,5 +1,5 @@
-name: Execute Automation Tests
-description: "Execute Automation Tests"
+name: Execute Tests for iOS Simulator
+description: "Execute Tests for iOS Simulator"
 inputs:
   ios-model:
     required: true
@@ -11,7 +11,7 @@ runs:
     - name: Modify iOS UDID
       run: |
         python3 - <<EOF
-        file_path = 'Resources/Locators/CommonLocators.robot'
+        file_path = 'Resources/Locators/CommonLocators_ios.robot'
         read_file = open(file_path, 'r')
         file_content = read_file.read()
         modify_content = file_content.replace("iphone_device_udid", "${{ env.SIMULATOR_UDID }}") \
@@ -25,12 +25,14 @@ runs:
         EOF
       shell: bash
 
+    - name: Start Appium Server
+      run: appium &
+      shell: bash
+
     - name: Run and Test on iOS Simulator
       run: |
-        ls
         xcrun simctl install "${{ env.SIMULATOR_UDID }}" "App/test.app"
-        xcrun simctl launch "${{env.SIMULATOR_UDID }}" "com.lanhuynh.test"
-        robot -d Reports/ios_${{ inputs.ios-version }} --loglevel TRACE UiTests/TestSuite.robot
+        robot -d Reports/ios_${{ inputs.ios-version }} --loglevel TRACE UiTests/TestSuite_ios.robot
       shell: bash
 
     - name: Archive Test Artifacts
