@@ -1,9 +1,6 @@
-name: Automation Test for Android
+name: Android Automation
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches:
       - master
@@ -12,33 +9,24 @@ jobs:
   test:
     name: Android Automation Test
     runs-on: macos-latest
-
+    strategy:
+      matrix:
+        api-level: [29, 30, 31, 32, 33]
     steps:
-      - name: Set up Homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-
       - name: Checkout Automation Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
+      - name: Environment Setup
+        uses: ./.github/actions/setup
 
-      - name: Create and Activate Venv
-        run: |
-          python3.9 -m venv venv
-          source venv/bin/activate
-
-      - name: Install frameworks and tools
+      - name: Install Appium and Android Platform
         run: |
           npm i --location=global appium
           appium driver install uiautomator2
           brew update
           brew install android-platform-tools
 
-      - name: Set up Environment Variables
+      - name: Set Up Environment Variables
         run: |
           echo 'export ANDROID_HOME=~/Library/Android/sdk' >> $HOME/.bashrc
           echo 'export PATH=$PATH:$ANDROID_HOME/tools/bin' >> $HOME/.bashrc
@@ -51,9 +39,6 @@ jobs:
 
       - name: Accept Android Licenses
         run: yes | source $HOME/.bashrc && $ANDROID_HOME/tools/bin/sdkmanager --licenses
-
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
 
       - name: Download APK File
         run: |
@@ -76,20 +61,21 @@ jobs:
       - name: Create AVD and Run Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: |
             adb devices
             adb install -r App/application.apk
-            robot -d Reports --loglevel TRACE UiTests/TestSuite.robot
+            robot -d Reports/${{ matrix.api-level }} --loglevel TRACE UiTests/TestSuite_android.robot
 
       - name: Archive Test Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Android Automation Reports
-          path: Reports
+          name: Android Automation (${{ matrix.api-level }}) Reports
+          path: Reports/${{ matrix.api-level }}
 
       - name: Stop Appium Server
         run: pkill -f appium

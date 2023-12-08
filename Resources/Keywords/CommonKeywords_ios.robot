@@ -1,7 +1,7 @@
 *** Settings ***
 Library         AppiumLibrary
 Library         OperatingSystem
-Resource        ../Locators/CommonLocators.robot
+Resource        ../Locators/CommonLocators_ios.robot
 
 *** Keywords ***
 Open Application On The Device

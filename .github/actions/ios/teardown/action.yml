@@ -9,9 +9,9 @@ runs:
 
     - name: Clean Up
       run: |
-        ls {.,App}
         rm -rf /tmp/appium*
         rm -f App/ios_build.tar.gz
         rm -rf App/test.app
+        rm -rf Reports
         rm -rf venv
       shell: bash
