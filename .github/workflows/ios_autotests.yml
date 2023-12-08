@@ -138,11 +138,11 @@ jobs:
         with:
           python-version: "3.12.0"
 
-      # - name: Set Up Xcode
-      #   run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+      - name: Set Up Xcode
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
-      # - name: Verify Xcode Installation
-      #   run: xcodebuild -version -sdk
+      - name: Verify Xcode Installation
+        run: xcodebuild -version -sdk
 
       # - name: Check Available Simulators
       #   run: xcrun simctl list devices
