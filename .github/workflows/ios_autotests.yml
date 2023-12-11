@@ -7,38 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint-typecheck:
-    name: ⬣ ESLint & Type check
-    runs-on: macos-13
-    steps:
-      - name: 🛑 Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.12.0
-
-      - name: Set Up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.0"
-
-      - name: Checkout Automation Code
-        uses: actions/checkout@v4
-
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pylint
-          pip install mypy
-          pip install robotframework-lint
-
-      - name: 🔬 Lint
-        run: |
-          pylint python_code/*
-          find . -type f -name "*.robot" -exec rflint {} \;
-
-      - name: 🔎 Type check
-        run: mypy python_code/*
-
-  # typecheck:
-  #   name: ✔️ Robot
+  # lint-typecheck:
+  #   name: ⬣ ESLint & Type check
   #   runs-on: macos-13
   #   steps:
   #     - name: 🛑 Cancel previous runs
@@ -49,13 +19,20 @@ jobs:
   #       with:
   #         python-version: "3.11.0"
 
-  #     - name: ⬇️ Checkout repository
+  #     - name: Checkout Automation Code
   #       uses: actions/checkout@v4
 
   #     - name: Install Dependencies
   #       run: |
   #         pip install -r requirements.txt
+  #         pip install pylint
   #         pip install mypy
+  #         pip install robotframework-lint
+
+  #     - name: 🔬 Lint
+  #       run: |
+  #         pylint python_code/*
+  #         find . -type f -name "*.robot" -exec rflint {} \;
 
   #     - name: 🔎 Type check
   #       run: mypy python_code/*
@@ -148,8 +125,8 @@ jobs:
     name: iOS Automation Test
     runs-on: macos-13
     env:
-      F_IOS_MODEL: iPhone 14
-      F_IOS_VERSION: 16.4
+      FW_IOS_MODEL: iPhone 14
+      FW_IOS_VERSION: 16.4
 
     steps:
       - name: Cancel Previous Runs
@@ -177,14 +154,15 @@ jobs:
       #     eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl
       #     echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
 
-      # - name: Set Up Homebrew
-      #   uses: Homebrew/actions/setup-homebrew@master
+      - name: Set Up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install Appium
         run: |
           npm i --location=global appium
           npm i appium-webdriveragent
           appium driver install xcuitest
+          ls -R
 
       - name: Set Up Python
         uses: actions/setup-python@v4
@@ -218,8 +196,8 @@ jobs:
         id: setup-simulator
         uses: futureware-tech/simulator-action@v3
         with:
-          model: "${{ env.F_IOS_MODEL }}"
-          os_version: ${{ env.F_IOS_VERSION }}
+          model: "${{ env.FW_IOS_MODEL }}"
+          os_version: ${{ env.FW_IOS_VERSION }}
 
       - name: Set Environment Variables for Simulator
         id: set-env-simulator
@@ -228,8 +206,8 @@ jobs:
       - name: Execute Automation Tests
         uses: ./.github/actions/ios/autotests
         with:
-          ios-model: ${{ env.F_IOS_MODELl }}
-          ios-version: ${{ env.F_IOS_VERSION }}
+          ios-model: ${{ env.FW_IOS_MODELl }}
+          ios-version: ${{ env.FW_IOS_VERSION }}
 
       - name: Workflow Teardown
         uses: ./.github/actions/ios/teardown
