@@ -2,7 +2,7 @@
 Library    AppiumLibrary
 
 *** Variables ***
-${URL}              http://0.0.0.0:4723
+${URL}              http://127.0.0.1:4723
 ${IOS_PLATFORM}     iOS
 ${IOS_UI_NAME}      XCUITest
 ${BUNDLE_ID}        com.lanhuynh.test
