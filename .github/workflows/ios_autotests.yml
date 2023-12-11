@@ -7,35 +7,35 @@ on:
   workflow_dispatch:
 
 jobs:
-  # lint-typecheck:
-  #   name: ⬣ ESLint & Type check
-  #   runs-on: macos-13
-  #   steps:
-  #     - name: 🛑 Cancel previous runs
-  #       uses: styfle/cancel-workflow-action@0.12.0
+  lint-typecheck:
+    name: ⬣ ESLint & Type check
+    runs-on: macos-13
+    steps:
+      - name: 🛑 Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.12.0
 
-  #     - name: Set Up Python
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: "3.11.0"
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
 
-  #     - name: Checkout Automation Code
-  #       uses: actions/checkout@v4
+      - name: Checkout Automation Code
+        uses: actions/checkout@v4
 
-  #     - name: Install Dependencies
-  #       run: |
-  #         pip install -r requirements.txt
-  #         pip install pylint
-  #         pip install mypy
-  #         pip install robotframework-lint
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pylint
+          pip install mypy
+          pip install robotframework-lint
 
-  #     - name: 🔬 Lint
-  #       run: |
-  #         pylint python_code/*
-  #         find . -type f -name "*.robot" -exec rflint {} \;
+      - name: 🔬 Lint
+        run: |
+          pylint python_code/*
+          find . -type f -name "*.robot" -exec rflint {} \;
 
-  #     - name: 🔎 Type check
-  #       run: mypy python_code/*
+      - name: 🔎 Type check
+        run: mypy python_code/*
 
   # autotests-first-version:
   #   name: iOS ${{ vars.IOS_FIRST_DEVICE_VERSION }} Automation
