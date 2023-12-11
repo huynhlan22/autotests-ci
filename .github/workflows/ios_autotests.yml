@@ -161,7 +161,7 @@ jobs:
         run: |
           npm i --location=global appium
           appium driver install xcuitest
-          npm i appium-webdriveragent@5.15.4
+          npm i appium-webdriveragent
 
       - name: Set Up Python
         uses: actions/setup-python@v4
@@ -217,9 +217,6 @@ jobs:
           modify_file.close()
           exit()
           EOF
-
-      - name: Start Appium Server
-        run: appium &
 
       - name: Run and Test on iOS Simulator
         run: |
