@@ -17,7 +17,7 @@ jobs:
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.12.0"
+          python-version: "3.11.0"
 
       - name: Checkout Automation Code
         uses: actions/checkout@v4
@@ -25,12 +25,13 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
+          pip install pylint
           pip install robotframework-lint
 
       - name: 🔬 Lint
         run: |
-          rflint Resources
-          # robotframework-lint UITests
+          find . -type f -name "*.robot" -exec rflint {} \;
+          pylint python_code/*
 
   # typecheck:
   #   name: ✔️ Robot
