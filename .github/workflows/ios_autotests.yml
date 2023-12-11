@@ -25,11 +25,11 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
-          pip install robotframework-lint
+          pip install –upgrade robotframework-lint
 
       - name: 🔬 Lint
         run: |
-          robotframework-lint Resources
+          rflint Resources
           # robotframework-lint UITests
 
   # typecheck:
