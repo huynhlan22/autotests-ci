@@ -163,6 +163,9 @@ jobs:
           appium driver install xcuitest
           npm i appium-webdriveragent
 
+      - name: Start Appium Server
+        run: appium &
+
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
