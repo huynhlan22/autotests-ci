@@ -126,7 +126,7 @@ jobs:
     runs-on: macos-13
     env:
       FW_IOS_MODEL: iPhone 14
-      FW_IOS_VERSION: 16.4
+      FW_IOS_VERSION: 17.0
 
     steps:
       - name: Cancel Previous Runs
