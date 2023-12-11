@@ -202,11 +202,35 @@ jobs:
         id: set-env-simulator
         run: echo "SIMULATOR_UDID=${{ steps.setup-simulator.outputs.udid }}" >> $GITHUB_ENV
 
-      - name: Execute Automation Tests
-        uses: ./.github/actions/ios/autotests
+      - name: Modify iOS UDID
+        run: |
+          python3 - <<EOF
+          file_path = 'Resources/Locators/CommonLocators_ios.robot'
+          read_file = open(file_path, 'r')
+          file_content = read_file.read()
+          modify_content = file_content.replace("iphone_device_udid", "${{ env.SIMULATOR_UDID }}") \
+                .replace("iphone_device_model", "${{ env.FW_IOS_MODEL }}") \
+                .replace("iphone_device_version", "${{ env.FW_IOS_VERSION }}")
+          read_file.close()
+          modify_file = open(file_path, 'w')
+          modify_file.write(modify_content)
+          modify_file.close()
+          exit()
+          EOF
+
+      - name: Start Appium Server
+        run: appium
+
+      - name: Run and Test on iOS Simulator
+        run: |
+          xcrun simctl install "${{ env.SIMULATOR_UDID }}" "App/test.app"
+          robot -d Reports/ios_${{ env.FW_IOS_VERSION }} --loglevel TRACE UiTests/TestSuite_ios.robot
+
+      - name: Archive Test Artifacts
+        uses: actions/upload-artifact@v3
         with:
-          ios-model: ${{ env.FW_IOS_MODELl }}
-          ios-version: ${{ env.FW_IOS_VERSION }}
+          name: iOS ${{ env.FW_IOS_VERSION }} Automation Reports
+          path: Reports/ios_${{ env.FW_IOS_VERSION }}
 
       - name: Workflow Teardown
         uses: ./.github/actions/ios/teardown
