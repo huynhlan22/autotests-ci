@@ -7,63 +7,52 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
-    name: ⬣ ESLint
+  # lint:
+  #   name: ⬣ ESLint
+  #   runs-on: macos-13
+  #   steps:
+  #     - name: 🛑 Cancel previous runs
+  #       uses: styfle/cancel-workflow-action@0.12.0
+
+  #     - name: Set Up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.11.0"
+
+  #     - name: Checkout Automation Code
+  #       uses: actions/checkout@v4
+
+  #     - name: Install Dependencies
+  #       run: |
+  #         pip install -r requirements.txt
+  #         pip install pylint
+  #         pip install robotframework-lint
+
+  #     - name: 🔬 Lint
+  #       run: |
+  #         find . -type f -name "*.robot" -exec rflint {} \;
+  #         pylint python_code/*
+
+  typecheck:
+    name: ✔️ Robot
     runs-on: macos-13
     steps:
       - name: 🛑 Cancel previous runs
         uses: styfle/cancel-workflow-action@0.12.0
 
-      - name: Set Up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.0"
-
-      - name: Checkout Automation Code
+      - name: ⬇️ Checkout repository
         uses: actions/checkout@v4
 
+      - name: ⎔ Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: "8.10.4"
+
       - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pylint
-          pip install robotframework-lint
+        run: pip install -r requirements.txt
 
-      - name: 🔬 Lint
-        run: |
-          find . -type f -name "*.robot" -exec rflint {} \;
-          pylint python_code/*
-
-  # typecheck:
-  #   name: ✔️ Robot
-  #   runs-on: macos-13
-  #   # env:
-  #   #   TOKEN: ${{ secrets.PAT }}
-  #   steps:
-  #     - name: 🛑 Cancel previous runs
-  #       uses: styfle/cancel-workflow-action@0.12.0
-
-  #     - name: ⬇️ Checkout repository
-  #       uses: actions/checkout@v4
-
-  #     - name: ⎔ Setup pnpm
-  #       uses: pnpm/action-setup@v2
-  #       with:
-  #         version: 8.10.4
-
-  #     - name: ⎔ Setup node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         cache: "pnpm"
-  #         node-version: 18.14.2
-
-  #     - name: 📥 Download dependencies
-  #       uses: bahmutov/npm-install@v1
-  #       with:
-  #         useLockFile: false
-  #         install-command: pnpm install
-
-  #     - name: 🔎 Type check
-  #       run: pnpm typecheck
+      - name: 🔎 Type check
+        run: pnpm typecheck
 
   # autotests-first-version:
   #   name: iOS ${{ vars.IOS_FIRST_DEVICE_VERSION }} Automation
