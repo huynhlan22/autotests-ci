@@ -15,5 +15,6 @@ robotframework-selenium2library==3.0.0
 robotframework-seleniumlibrary==5.1.0
 robotframework-sshlibrary==3.6.0
 robotremoteserver==1.1
+robotframework-lint==1.1
 DateTime
 robot-mongodb-library
