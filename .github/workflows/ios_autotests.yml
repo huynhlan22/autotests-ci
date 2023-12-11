@@ -162,7 +162,7 @@ jobs:
           npm i --location=global appium
           npm i appium-webdriveragent
           appium driver install xcuitest
-          cd @appium
+          cd ./node_modules/@appium
           ls -R
 
       - name: Set Up Python
