@@ -14,28 +14,23 @@ jobs:
       - name: 🛑 Cancel previous runs
         uses: styfle/cancel-workflow-action@0.12.0
 
-      - name: ⬇️ Checkout repository
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12.0"
+
+      - name: Checkout Automation Code
         uses: actions/checkout@v4
 
-      - name: ⎔ Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8.10.4
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          cache: "pnpm"
-          node-version: 18.14.2
-
-      - name: 📥 Download dependencies
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-          install-command: pnpm install
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install robotframework-lint
 
       - name: 🔬 Lint
-        run: pnpm lint
+        run: |
+          robotframework-lint Resources
+          robotframework-lint UITests
 
   # typecheck:
   #   name: ✔️ Robot
@@ -164,21 +159,21 @@ jobs:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.0
 
-      # - name: 🛠️ Setup Expo
+      # - name: 🛠️ Setup Expo # pre-requisite for building the app
       #   uses: expo/expo-github-action@v8
       #   with:
       #     expo-version: latest
       #     eas-version: latest
       #     token: ${{ secrets.EXPO_TOKEN }}
 
-      # - name: Checkout Application Code
+      # - name: Checkout Application Code # pre-requisite for building the app
       #   uses: actions/checkout@v4
       #   with:
       #     repository: huynhlan21/test
       #     ref: build
       #     path: App
 
-      # - name: Build for iOS Similators
+      # - name: Build for iOS Similators # to build the app for simulator
       #   run: |
       #     cd App
       #     npm i
@@ -186,8 +181,8 @@ jobs:
       #     eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl
       #     echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
 
-      - name: Set Up Homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+      # - name: Set Up Homebrew
+      #   uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install Appium
         run: |
@@ -200,8 +195,8 @@ jobs:
         with:
           python-version: "3.12.0"
 
-      # - name: Set Up Xcode
-      #   run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+      - name: Set Up Xcode
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
       # - name: Verify Xcode Installation
       #   run: xcodebuild -version -sdk
