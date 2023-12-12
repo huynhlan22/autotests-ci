@@ -162,9 +162,7 @@ jobs:
           npm i --location=global appium
           appium driver install xcuitest
           npm i appium-webdriveragent
-
-      - name: Start Appium Server
-        run: appium &
+          ls -R
 
       - name: Set Up Python
         uses: actions/setup-python@v4
@@ -185,6 +183,9 @@ jobs:
 
       - name: Install Dependencies
         run: pip install -r requirements.txt
+
+      - name: Start Appium Server
+        run: appium &
 
       - name: Download and Extract iOS Build
         run: |
