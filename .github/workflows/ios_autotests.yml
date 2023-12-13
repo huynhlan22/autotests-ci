@@ -182,7 +182,7 @@ jobs:
       - name: Set up Keychain
         run: |
           # security create-keychain -p ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} login.keychain-db
-          security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+          # security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
           security set-keychain-settings -lut 7200 login.keychain-db
           security unlock-keychain -p ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} login.keychain-db
           security set-key-partition-list -S apple-tool:,apple: -s -k ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} login.keychain-db
