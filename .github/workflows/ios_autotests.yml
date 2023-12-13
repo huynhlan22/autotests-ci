@@ -174,7 +174,11 @@ jobs:
       - name: Build WebDriverAgent
         run: |
           cd ./node_modules/appium-webdriveragent
-          xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination 'platform=iOS Simulator,OS=17.0,name=iPhone 14' build
+          xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner \
+          -destination 'platform=iOS Simulator,OS=17.0,name=iPhone 14' \
+          -allowProvisioningUpdates \
+          DEVELOPMENT_TEAM=YPJC3HU39N \
+          build
 
       - name: Test WebDriverAgent on Simulator
         run: |
