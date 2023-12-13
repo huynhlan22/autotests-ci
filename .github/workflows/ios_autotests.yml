@@ -163,8 +163,8 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane -NV
 
-      # - name: Import Signing Certificate
-      #   run: echo "${{ secrets.APPLE_CERTIFICATE }}" | tr -d '\n' | base64 -D > certificate.p12
+      - name: Import Signing Certificate
+        run: echo "${{ secrets.APPLE_CERTIFICATE }}" | tr -d '\n' | base64 -D > certificate.p12
 
       # - name: Set Keychain Settings
       #   run: security set-keychain-settings -lut 7200 login.keychain-db
