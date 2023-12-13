@@ -163,11 +163,8 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane -NV
 
-      - name: Import Signing Certificate
-        run: echo "${{ secrets.APPLE_CERTIFICATE }}" | tr -d '\n' | base64 -D > certificate.p12
-
-      # - name: Check Keychain List
-      #   run: security list-keychains
+      # - name: Import Signing Certificate
+      #   run: echo "${{ secrets.APPLE_CERTIFICATE }}" | tr -d '\n' | base64 -D > certificate.p12
 
       # - name: Set Keychain Settings
       #   run: security set-keychain-settings -lut 7200 login.keychain-db
@@ -181,11 +178,11 @@ jobs:
 
       - name: Set up Keychain
         run: |
-          # security create-keychain -p ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} login.keychain-db
-          # security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+          security create-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} login.keychain-db
+          security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P ${{ secrets.KEYCHAIN_PASSWORD }} -T /usr/bin/codesign
           security set-keychain-settings -lut 7200 login.keychain-db
-          security unlock-keychain -p ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} login.keychain-db
-          security set-key-partition-list -S apple-tool:,apple: -s -k ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} login.keychain-db
+          security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} login.keychain-db
+          security set-key-partition-list -S apple-tool:,apple: -s -k ${{ secrets.KEYCHAIN_PASSWORD }} login.keychain-db
 
       - name: Install Appium
         run: |
