@@ -171,11 +171,22 @@ jobs:
         with:
           python-version: "3.12.0"
 
+      - name: Import Signing Certificate
+        run: echo ${{ secret.APPLE_CERTIFICATE }} | base64 --decode > certificate.p12
+
+      - name: Set up Keychain
+        run: |
+          security create-keychain -p mysecretpassword build.keychain
+          security import certificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secret.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+          security set-keychain-settings -lut 7200 build.keychain
+          security unlock-keychain -p mysecretpassword build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k mysecretpassword build.keychain
+
       - name: Build WebDriverAgent
         run: |
           cd ./node_modules/appium-webdriveragent
           xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner \
-          -destination 'platform=iOS Simulator,OS=17.0,name=iPhone 14' \
+          -destination 'platform=iOS Simulator,OS=${{ env.FW_IOS_VERSION }},name=${{ env.FW_IOS_MODEL }}' \
           -allowProvisioningUpdates \
           DEVELOPMENT_TEAM=YPJC3HU39N \
           build
@@ -183,7 +194,7 @@ jobs:
       - name: Test WebDriverAgent on Simulator
         run: |
           cd ./node_modules/appium-webdriveragent
-          xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination 'platform=iOS Simulator,OS=17.0,name=iPhone 14' test
+          xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination 'platform=iOS Simulator,OS=${{ env.FW_IOS_VERSION }},name=${{ env.FW_IOS_MODEL }}' test
 
       # - name: Verify Xcode Installation
       #   run: xcodebuild -version -sdk
