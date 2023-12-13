@@ -160,6 +160,9 @@ jobs:
       - name: Set Up Xcode
         run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
+      - name: Install Fastlane
+        run: gem install fastlane -NV
+
       - name: Install Appium
         run: |
           npm i --location=global appium
@@ -176,7 +179,6 @@ jobs:
 
       - name: Set up Keychain
         run: |
-          cat certificate.p12
           security create-keychain -p mysecretpassword build.keychain
           security import certificate.p12 -k ~/Library/Keychains/ogin.keychain-db -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
           security set-keychain-settings -lut 7200 build.keychain
