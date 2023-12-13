@@ -170,21 +170,21 @@ jobs:
         run: security list-keychains
 
       - name: Set Keychain Settings
-        run: security set-keychain-settings -lut 7200 build.keychain
+        run: security set-keychain-settings -lut 7200 login.keychain-db
 
       - name: Unlock Keychain
-        run: security unlock-keychain -p mysecretpassword build.keychain
+        run: security unlock-keychain -p mysecretpassword login.keychain-db
 
       - name: Set Keychain Partition List
         run: |
-          security set-key-partition-list -S apple-tool:,apple: -s -k mysecretpassword build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k mysecretpassword login.keychain-db
 
       - name: Set up Keychain
         run: |
-          security create-keychain -p mysecretpassword build.keychain
-          security import certificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
-          # security set-keychain-settings -lut 7200 build.keychain
-          # security unlock-keychain -p mysecretpassword build.keychain
+          security create-keychain -p mysecretpassword login.keychain-db
+          security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+          # security set-keychain-settings -lut 7200 login.keychain-db
+          # security unlock-keychain -p mysecretpassword login.keychain-db
           # security set-key-partition-list -S apple-tool:,apple: -s -k mysecretpassword build.keychain
 
       - name: Install Appium
