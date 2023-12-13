@@ -178,7 +178,7 @@ jobs:
 
       - name: Set up Keychain
         run: |
-          security create-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} login.keychain-db
+          # security create-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} login.keychain-db
           security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P ${{ secrets.KEYCHAIN_PASSWORD }} -T /usr/bin/codesign
           security set-keychain-settings -lut 7200 login.keychain-db
           security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} login.keychain-db
