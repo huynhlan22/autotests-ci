@@ -201,7 +201,7 @@ jobs:
           xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner \
           -destination 'platform=iOS Simulator,OS=${{ env.FW_IOS_VERSION }},name=${{ env.FW_IOS_MODEL }}' \
           -allowProvisioningUpdates \
-          DEVELOPMENT_TEAM=YPJC3HU39N \
+          DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM_ID }} \
           build
 
       - name: Test WebDriverAgent on Simulator
