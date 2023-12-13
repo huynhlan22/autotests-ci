@@ -172,7 +172,7 @@ jobs:
           python-version: "3.12.0"
 
       - name: Import Signing Certificate
-        run: echo ${{ secrets.APPLE_CERTIFICATE }} | base64 -D > certificate.p12
+        run: echo "${{ secrets.APPLE_CERTIFICATE }}"" | base64 -D > certificate.p12
 
       - name: Set up Keychain
         run: |
