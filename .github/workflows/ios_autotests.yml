@@ -163,6 +163,30 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane -NV
 
+      - name: Import Signing Certificate
+        run: echo "${{ secrets.APPLE_CERTIFICATE }}" | tr -d '\n' | base64 -D > certificate.p12
+
+      - name: Check Keychain List
+        run: security list-keychains
+
+      - name: Set Keychain Settings
+        run: security set-keychain-settings -lut 7200 build.keychain
+
+      - name: Unlock Keychain
+        run: security unlock-keychain -p mysecretpassword build.keychain
+
+      - name: Set Keychain Partition List
+        run: |
+          security set-key-partition-list -S apple-tool:,apple: -s -k mysecretpassword build.keychain
+
+      - name: Set up Keychain
+        run: |
+          security create-keychain -p mysecretpassword build.keychain
+          security import certificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+          # security set-keychain-settings -lut 7200 build.keychain
+          # security unlock-keychain -p mysecretpassword build.keychain
+          # security set-key-partition-list -S apple-tool:,apple: -s -k mysecretpassword build.keychain
+
       - name: Install Appium
         run: |
           npm i --location=global appium
@@ -173,17 +197,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.12.0"
-
-      - name: Import Signing Certificate
-        run: echo "${{ secrets.APPLE_CERTIFICATE }}" | tr -d '\n' | base64 -D > certificate.p12
-
-      - name: Set up Keychain
-        run: |
-          security create-keychain -p mysecretpassword build.keychain
-          security import certificate.p12 -k ~/Library/Keychains/ogin.keychain-db -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
-          security set-keychain-settings -lut 7200 build.keychain
-          security unlock-keychain -p mysecretpassword build.keychain
-          security set-key-partition-list -S apple-tool:,apple: -s -k mysecretpassword build.keychain
 
       - name: Build WebDriverAgent
         run: |
@@ -262,3 +275,6 @@ jobs:
 
       - name: Workflow Teardown
         uses: ./.github/actions/ios/teardown
+
+      - name: Delete Keychain
+        run: security delete-keychain build.keychain
