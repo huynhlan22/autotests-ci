@@ -3,42 +3,11 @@ name: iOS Automation
 on:
   pull_request:
     branches:
-      - main
-  workflow_dispatch:
+      - main1
 
 jobs:
-  lint-typecheck:
-    name: ⬣ ESLint & Type check
-    runs-on: macos-13
-    steps:
-      - name: 🛑 Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.12.0
-
-      - name: Set Up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.0"
-
-      - name: Checkout Automation Code
-        uses: actions/checkout@v4
-
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pylint
-          pip install mypy
-          pip install robotframework-lint
-
-      - name: 🔬 Lint
-        run: |
-          pylint python_code/*
-          find . -type f -name "*.robot" -exec rflint {} \;
-
-      - name: 🔎 Type check
-        run: mypy python_code/*
-
-  # typecheck:
-  #   name: ✔️ Robot
+  # lint-typecheck:
+  #   name: ⬣ ESLint & Type check
   #   runs-on: macos-13
   #   steps:
   #     - name: 🛑 Cancel previous runs
@@ -47,15 +16,22 @@ jobs:
   #     - name: Set Up Python
   #       uses: actions/setup-python@v4
   #       with:
-  #         python-version: "3.11.0"
+  #         python-version: "3.9"
 
-  #     - name: ⬇️ Checkout repository
+  #     - name: Checkout Automation Code
   #       uses: actions/checkout@v4
 
   #     - name: Install Dependencies
   #       run: |
   #         pip install -r requirements.txt
+  #         pip install pylint
   #         pip install mypy
+  #         pip install robotframework-lint
+
+  #     - name: 🔬 Lint
+  #       run: |
+  #         pylint python_code/*
+  #         find . -type f -name "*.robot" -exec rflint {} \;
 
   #     - name: 🔎 Type check
   #       run: mypy python_code/*
@@ -148,8 +124,8 @@ jobs:
     name: iOS Automation Test
     runs-on: macos-13
     env:
-      F_IOS_MODEL: iPhone 14
-      F_IOS_VERSION: 16.4
+      FW_IOS_MODEL: iPhone 14
+      FW_IOS_VERSION: 17.0
 
     steps:
       - name: Cancel Previous Runs
@@ -177,22 +153,60 @@ jobs:
       #     eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl
       #     echo "ios-download-build=$(eas build:list --json --non-interactive --limit=1 --platform=ios | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
 
-      # - name: Set Up Homebrew
-      #   uses: Homebrew/actions/setup-homebrew@master
+      - name: Set Up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Set Up Xcode
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+      - name: Install Fastlane
+        run: gem install fastlane -NV
+
+      - name: Import Signing Certificate
+        run: echo "${{ secrets.APPLE_CERTIFICATE }}" | tr -d '\n' | base64 -D > certificate.p12
+
+      - name: Set Keychain Settings
+        run: security set-keychain-settings -lut 7200 login.keychain-db
+
+      # - name: Unlock Keychain
+      #   run: security unlock-keychain -p mysecretpassword login.keychain-db
+
+      # - name: Set Keychain Partition List
+      #   run: |
+      #     security set-key-partition-list -S apple-tool:,apple: -s -k mysecretpassword login.keychain-db
+
+      # - name: Set up Keychain
+      #   run: |
+      #     # security create-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} login.keychain-db
+      #     # security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P ${{ secrets.KEYCHAIN_PASSWORD }} -T /usr/bin/codesign
+      #     security set-keychain-settings -lut 7200 login.keychain-db
+      #     # security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} login.keychain-db
+      #     # security set-key-partition-list -S apple-tool:,apple: -s -k ${{ secrets.KEYCHAIN_PASSWORD }} login.keychain-db
 
       - name: Install Appium
         run: |
           npm i --location=global appium
-          npm i appium-webdriveragent
           appium driver install xcuitest
+          npm i appium-webdriveragent
 
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.12.0"
 
-      - name: Set Up Xcode
-        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+      - name: Build WebDriverAgent
+        run: |
+          cd ./node_modules/appium-webdriveragent
+          xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner \
+          -destination 'platform=iOS Simulator,OS=${{ env.FW_IOS_VERSION }},name=${{ env.FW_IOS_MODEL }}' \
+          -allowProvisioningUpdates \
+          DEVELOPMENT_TEAM=${{ secrets.DEVELOPMENT_TEAM_ID }} \
+          build
+
+      - name: Test WebDriverAgent on Simulator
+        run: |
+          cd ./node_modules/appium-webdriveragent
+          xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination 'platform=iOS Simulator,OS=${{ env.FW_IOS_VERSION }},name=${{ env.FW_IOS_MODEL }}' test
 
       # - name: Verify Xcode Installation
       #   run: xcodebuild -version -sdk
@@ -206,6 +220,9 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
+      - name: Start Appium Server
+        run: appium &
+
       - name: Download and Extract iOS Build
         run: |
           mkdir -p App
@@ -218,18 +235,42 @@ jobs:
         id: setup-simulator
         uses: futureware-tech/simulator-action@v3
         with:
-          model: "${{ env.F_IOS_MODEL }}"
-          os_version: ${{ env.F_IOS_VERSION }}
+          model: "${{ env.FW_IOS_MODEL }}"
+          os_version: ${{ env.FW_IOS_VERSION }}
 
       - name: Set Environment Variables for Simulator
         id: set-env-simulator
         run: echo "SIMULATOR_UDID=${{ steps.setup-simulator.outputs.udid }}" >> $GITHUB_ENV
 
-      - name: Execute Automation Tests
-        uses: ./.github/actions/ios/autotests
+      - name: Modify iOS UDID
+        run: |
+          python3 - <<EOF
+          file_path = 'Resources/Locators/CommonLocators_ios.robot'
+          read_file = open(file_path, 'r')
+          file_content = read_file.read()
+          modify_content = file_content.replace("iphone_device_udid", "${{ env.SIMULATOR_UDID }}") \
+                .replace("iphone_device_model", "${{ env.FW_IOS_MODEL }}") \
+                .replace("iphone_device_version", "${{ env.FW_IOS_VERSION }}")
+          read_file.close()
+          modify_file = open(file_path, 'w')
+          modify_file.write(modify_content)
+          modify_file.close()
+          exit()
+          EOF
+
+      - name: Run and Test on iOS Simulator
+        run: |
+          xcrun simctl install "${{ env.SIMULATOR_UDID }}" "App/test.app"
+          robot -d Reports/ios_${{ env.FW_IOS_VERSION }} --loglevel TRACE UiTests/TestSuite_ios.robot
+
+      - name: Archive Test Artifacts
+        uses: actions/upload-artifact@v3
         with:
-          ios-model: ${{ env.F_IOS_MODELl }}
-          ios-version: ${{ env.F_IOS_VERSION }}
+          name: iOS ${{ env.FW_IOS_VERSION }} Automation Reports
+          path: Reports/ios_${{ env.FW_IOS_VERSION }}
 
       - name: Workflow Teardown
         uses: ./.github/actions/ios/teardown
+
+      - name: Delete Keychain
+        run: security delete-keychain build.keychain

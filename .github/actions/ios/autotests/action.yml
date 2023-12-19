@@ -26,7 +26,7 @@ runs:
       shell: bash
 
     - name: Start Appium Server
-      run: appium &
+      run: appium
       shell: bash
 
     - name: Run and Test on iOS Simulator
