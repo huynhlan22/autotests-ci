@@ -3,8 +3,7 @@ name: iOS Automation
 on:
   pull_request:
     branches:
-      - main
-  workflow_dispatch:
+      - main1
 
 jobs:
   # lint-typecheck:
